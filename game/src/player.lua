@@ -6,6 +6,8 @@ function Player:new()
     self.width = 200
     self.height = 150
     self.speed = 100
+    self.currentHealth = 100
+    self.maxHealth = 100
 end
 
 function Player:draw()
@@ -15,4 +17,8 @@ end
 function Player:move(x, y)
     self.x = self.x + x
     self.y = self.y - y
+end
+
+function Player:ChangeHealth(amount)
+    self.currentHealth = Clamp(amount, 0, self.maxHealth)
 end
