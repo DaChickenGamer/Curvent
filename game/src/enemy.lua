@@ -1,7 +1,7 @@
-Player = Object:extend()
+Enemy = Object:extend()
 
-function Player:new(x, y, w, h)
-	Player.super.new(self)
+function Enemy:new(x, y, w, h)
+	Enemy.super.new(self)
 
     if type(x) == "table" then
         local args = x
@@ -17,19 +17,19 @@ function Player:new(x, y, w, h)
     self.maxHealth = 100
 	self.currentHealth = self.maxHealth
 
-	table.insert(self.tags, "player")
+	table.insert(self.tags, "enemy")
 end
 
-function Player:draw()
-	love.graphics.setColor(0, 0, 1)
+function Enemy:draw()
+	love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("line", self.position.x, self.position.y, self.size.x, self.size.y)
 end
 
-function Player:move(x, y)
+function Enemy:move(x, y)
     self.position = Vector.__add(self.position, Vector.new(x * self.speed, -y * self.speed))
 end
 
-function Player:ChangeHealth(amount)
+function Enemy:ChangeHealth(amount)
     self.currentHealth = math.clamp(0, self.currentHealth + amount, self.maxHealth)
 
 	if self.currentHealth == 0 then
@@ -37,4 +37,4 @@ function Player:ChangeHealth(amount)
 	end
 end
 
-return Player
+return Enemy

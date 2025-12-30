@@ -10,13 +10,16 @@ function love.load()
 	require "lib.generalmath"
 
     Player = require "src.player"
+	Enemy = require "src.enemy"
     Projectile = require "src.projectile"
 
-	table.insert(gameObjects, Player())
+	table.insert(gameObjects, Player({x=250, y=100}))
 
 	table.insert(gameObjects, Projectile(0, 100))
 	table.insert(gameObjects, Projectile(0, 200))
 	table.insert(gameObjects, Projectile(0, 300))
+
+	table.insert(gameObjects, Enemy({x = 500}))
 end
 
 function love.update(dt)
