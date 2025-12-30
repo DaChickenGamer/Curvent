@@ -1,18 +1,12 @@
---
--- classic
---
--- Copyright (c) 2014, rxi
---
--- This module is free software; you can redistribute it and/or modify it under
--- the terms of the MIT license. See LICENSE for details.
---
-
-
 local Object = {}
 Object.__index = Object
 
 
 function Object:new()
+	self.position = self.position or Vector.new(0, 0)
+    self.size = self.size or Vector.new(16, 16)
+
+	self.tags = {}
 	self.destroyed = false
 end
 
@@ -65,5 +59,18 @@ function Object:__call(...)
   return obj
 end
 
+function Object:onCollision(other)
+
+end
+
+function Object:compareTag(tag)
+	for i = 1, #self.tags do
+		if self.tags[i] == tag then
+			return true
+		end
+	end
+
+	return false
+end
 
 return Object

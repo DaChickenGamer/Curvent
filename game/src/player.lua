@@ -1,11 +1,15 @@
-Player = Object.extend(Object)
+Player = Object:extend()
 
 function Player:new()
-    self.position = Vector.new(0, 0)
+	Player.super.new(self)
+
+    self.position = Vector.new(100, 100)
     self.size = Vector.new(200, 150)
     self.speed = 1
-    self.currentHealth = 100
     self.maxHealth = 100
+	self.currentHealth = self.maxHealth
+
+	table.insert(self.tags, "player")
 end
 
 function Player:draw()
@@ -17,7 +21,11 @@ function Player:move(x, y)
 end
 
 function Player:ChangeHealth(amount)
-    self.currentHealth = math.clamp(0, amount, self.maxHealth)
+    self.currentHealth = math.clamp(0, self.currentHealth + amount, self.maxHealth)
+
+	if self.currentHealth == 0 then
+		self.destroyed = true
+	end
 end
 
 return Player

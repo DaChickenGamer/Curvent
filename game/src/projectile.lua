@@ -1,10 +1,14 @@
-Projectile = Object.extend(Object)
+Projectile = Object:extend()
 
 function Projectile:new(x, y)
+	Projectile.super.new(self)
+
     self.speed = 50
-    self.size = 10
+    self.size = Vector.new(10, 10)
     self.position = Vector.new(x or 0, y or 0)
     self.velocity = Vector.new(self.speed, 0)
+
+	table.insert(self.tags, "projectile")
 end
 
 function Projectile:update(dt)
@@ -12,7 +16,14 @@ function Projectile:update(dt)
 end
 
 function Projectile:draw()
-    love.graphics.circle("fill", self.position.x, self.position.y, self.size)
+    love.graphics.circle("fill", self.position.x, self.position.y, self.size.x)
+end
+
+function Projectile:onCollision(other)
+	if not other:compareTag("player") then return end
+
+	other:ChangeHealth(-10)
+	self.destroyed = true
 end
 
 return Projectile

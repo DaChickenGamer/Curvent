@@ -6,14 +6,17 @@ function love.load()
     Object = require "lib.classic"
 	Vector = require "lib.Vector"
 
+	require "src.collision"
+	require "lib.generalmath"
+
     Player = require "src.player"
     Projectile = require "src.projectile"
 
-    player = Player()
-    testProjectile = Projectile(500, 250)
+	table.insert(gameObjects, Player())
 
-	table.insert(gameObjects, player)
-	table.insert(gameObjects, testProjectile)
+	table.insert(gameObjects, Projectile(0, 100))
+	table.insert(gameObjects, Projectile(0, 200))
+	table.insert(gameObjects, Projectile(0, 300))
 end
 
 function love.update(dt)
@@ -21,6 +24,7 @@ function love.update(dt)
 	
 	HandlePlayerMovement()
 	GameObjectUpdate(dt)
+	CollisionCheck()
 end
 
 function love.draw()
@@ -28,7 +32,7 @@ function love.draw()
 end
 
 function GameObjectUpdate(dt)
-	for i = 1, #gameObjects do
+	for i = #gameObjects, 1, -1 do
 		local obj = gameObjects[i]
 
 		if obj.update then
@@ -37,6 +41,21 @@ function GameObjectUpdate(dt)
 
 		if obj.destroyed then
 			table.remove(gameObjects, i)
+		end
+	end
+end
+
+function CollisionCheck()
+	for i = 1, #gameObjects do
+		local a = gameObjects[i]
+
+		for j = i + 1, #gameObjects do
+			local b = gameObjects[j]
+
+			if AABB(a, b) then
+				if a.onCollision then a:onCollision(b) end
+				if b.onCollision then b:onCollision(a) end
+			end
 		end
 	end
 end
@@ -52,27 +71,37 @@ function GameObjectDraw()
 end
 
 function HandlePlayerMovement()
+    local playerObj = nil
+
+    for _, obj in ipairs(gameObjects) do
+        if obj:compareTag("player") then
+            playerObj = obj
+            break
+        end
+    end
+
+    if not playerObj then
+        return
+    end
+
     local isMoving = false
 
     if love.keyboard.isDown("w") then
-        player:move(0, 1)
+        playerObj:move(0, 1)
         isMoving = true
     end
     if love.keyboard.isDown("a") then
-        player:move(-1, 0)
+        playerObj:move(-1, 0)
         isMoving = true
     end
     if love.keyboard.isDown("s") then
-        player:move(0, -1)
+        playerObj:move(0, -1)
         isMoving = true
     end
     if love.keyboard.isDown("d") then
-        player:move(1, 0)
+        playerObj:move(1, 0)
         isMoving = true
     end
-    if isMoving then
-        Time_Dilation = 1
-    else
-        Time_Dilation = 0.1
-    end
+
+    Time_Dilation = isMoving and 1 or 0.1
 end
