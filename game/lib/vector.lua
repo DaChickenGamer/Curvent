@@ -69,4 +69,19 @@ function Vector.__tostring(v)
 	 return "(" .. v.x .. ", " .. v.y .. ")"
 end
 
+-- vector magnitude calculation
+function Vector:magnitude()
+	return math.sqrt(math.pow(self.x, 2) + math.pow(self.y, 2))
+end
+
+-- vector normailization
+function Vector:normalize()
+    local mag = self:magnitude()
+    if mag == 0 then
+        return Vector.new(0, 0)
+    end
+
+    return Vector.new(self.x / mag, self.y / mag)
+end
+
 return Vector

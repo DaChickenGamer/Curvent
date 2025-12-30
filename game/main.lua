@@ -8,6 +8,7 @@ function love.load()
 
 	require "src.collision"
 	require "lib.generalmath"
+	require "lib.table"
 
     Player = require "src.player"
 	Enemy = require "src.enemy"
@@ -87,24 +88,29 @@ function HandlePlayerMovement()
         return
     end
 
-    local isMoving = false
+    local playerInAction = false
 
     if love.keyboard.isDown("w") then
         playerObj:move(0, 1)
-        isMoving = true
+        playerInAction = true
     end
     if love.keyboard.isDown("a") then
         playerObj:move(-1, 0)
-        isMoving = true
+        playerInAction = true
     end
     if love.keyboard.isDown("s") then
         playerObj:move(0, -1)
-        isMoving = true
+        playerInAction = true
     end
     if love.keyboard.isDown("d") then
         playerObj:move(1, 0)
-        isMoving = true
+        playerInAction = true
     end
 
-    Time_Dilation = isMoving and 1 or 0.1
+	if love.keyboard.isDown("space") then
+    	playerObj:attack()
+		playerInAction = true
+	end
+
+    Time_Dilation = playerInAction and 1 or 0.1
 end

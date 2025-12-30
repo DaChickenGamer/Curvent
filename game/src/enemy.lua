@@ -29,6 +29,11 @@ function Enemy:move(x, y)
     self.position = Vector.__add(self.position, Vector.new(x * self.speed, -y * self.speed))
 end
 
+function Enemy:onHit()
+	self:ChangeHealth(-10)
+	print(self.currentHealth)
+end
+
 function Enemy:ChangeHealth(amount)
     self.currentHealth = math.clamp(0, self.currentHealth + amount, self.maxHealth)
 

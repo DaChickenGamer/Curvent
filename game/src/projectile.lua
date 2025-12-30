@@ -29,7 +29,7 @@ end
 function Projectile:onCollision(other)
 	if not other:compareTag("player") then return end
 
-	other:ChangeHealth(-10)
+	other:onHit(-10)
 	self.destroyed = true
 end
 
