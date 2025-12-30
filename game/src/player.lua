@@ -18,7 +18,16 @@ function Player:new(x, y, w, h)
     self.maxHealth = 100
 	self.currentHealth = self.maxHealth
 
+	self.attackCooldown = 0
+	self.attackDelay = .3
+
 	table.insert(self.tags, "player")
+end
+
+function Player:update(dt)
+	if self.attackCooldown > 0 then
+		self.attackCooldown = self.attackCooldown - dt
+	end
 end
 
 function Player:draw()
@@ -37,6 +46,8 @@ function Player:move(x, y)
 end
 
 function Player:attack()
+	if self.attackCooldown > 0 then return end
+
     local attackRange = 5
     local attackSize = 20
 
@@ -51,6 +62,8 @@ function Player:attack()
     }
 
     self:checkAttackHitbox(hitbox)
+
+	self.attackCooldown = self.attackDelay
 end
 
 function Player:onHit()
