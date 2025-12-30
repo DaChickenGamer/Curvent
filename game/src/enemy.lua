@@ -21,7 +21,7 @@ function Enemy:new(x, y, w, h)
 end
 
 function Enemy:draw()
-	love.graphics.setColor(0, 1, 0)
+	love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("line", self.position.x, self.position.y, self.size.x, self.size.y)
 end
 
@@ -31,7 +31,6 @@ end
 
 function Enemy:onHit()
 	self:ChangeHealth(-10)
-	print(self.currentHealth)
 end
 
 function Enemy:ChangeHealth(amount)

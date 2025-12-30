@@ -31,7 +31,12 @@ function Player:update(dt)
 end
 
 function Player:draw()
-	love.graphics.setColor(0, 0, 1)
+	if self.attackCooldown > 0 then
+		love.graphics.setColor(0, .5, 0)
+	else
+		love.graphics.setColor(.5, 1, .5)
+	end
+
     love.graphics.rectangle("line", self.position.x, self.position.y, self.size.x, self.size.y)
 end
 
