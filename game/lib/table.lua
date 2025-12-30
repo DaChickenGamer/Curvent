@@ -5,5 +5,5 @@ function table.find(list, value)
         end
     end
 
-    return nil	
+    return nil
 end

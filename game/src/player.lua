@@ -41,11 +41,19 @@ function Player:draw()
 end
 
 function Player:move(x, y)
-    local moveVec = Vector.new(x, -y)
 
+    local moveVec = Vector.new(x, -y)
     if moveVec.x ~= 0 or moveVec.y ~= 0 then
         self.facing = moveVec:normalize()
     end
+
+	local hitbox = {
+		x = self.position.x + self.facing.x * self.speed + 1,
+		y = self.position.y + self.facing.y * self.speed + 1,
+		w = self.size.x - 1,
+		h = self.size.y - 1,
+	}
+	if(self:checkHitWithTag(hitbox, "tile")) then return end
 
     self.position = self.position + moveVec * self.speed
 end
@@ -66,7 +74,7 @@ function Player:attack()
         h = attackSize
     }
 
-    self:checkAttackHitbox(hitbox)
+    self:checkHitWithTag(hitbox, "enemy")
 
 	self.attackCooldown = self.attackDelay
 end
@@ -84,16 +92,18 @@ function Player:ChangeHealth(amount)
 	end
 end
 
-function Player:checkAttackHitbox(hitbox)
+function Player:checkHitWithTag(hitbox, tag)
     for _, obj in ipairs(gameObjects) do
-        if obj ~= self and obj.tags and table.find(obj.tags, "enemy") then
+        if obj ~= self and obj.tags and table.find(obj.tags, tag) then
             if AABB_Box(hitbox, obj) then
                 if obj.onHit then
                     obj:onHit(self)
                 end
+                return true
             end
         end
     end
+    return false
 end
 
 return Player

@@ -2,6 +2,7 @@ Time_Dilation = .1
 
 gameObjects = {}
 
+
 function love.load()
     Object = require "lib.classic"
 	Vector = require "lib.Vector"
@@ -13,19 +14,19 @@ function love.load()
     Player = require "src.player"
 	Enemy = require "src.enemy"
     Projectile = require "src.projectile"
+	Tile = require "src.tile"
+	Maps = require "src.maps"
 
-	table.insert(gameObjects, Player({x=250, y=100}))
-
-	table.insert(gameObjects, Projectile(0, 100))
-	table.insert(gameObjects, Projectile(0, 200))
-	table.insert(gameObjects, Projectile(0, 300))
-
-	table.insert(gameObjects, Enemy({x = 500}))
+	NextMap()
 end
 
 function love.update(dt)
 	dt = dt * Time_Dilation
 	
+	if(not LoadingMap and EnemiesAlive <= 0) then
+		NextMap()
+	end
+
 	HandlePlayerMovement()
 	GameObjectUpdate(dt)
 	CollisionCheck()

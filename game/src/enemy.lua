@@ -37,6 +37,7 @@ function Enemy:ChangeHealth(amount)
     self.currentHealth = math.clamp(0, self.currentHealth + amount, self.maxHealth)
 
 	if self.currentHealth == 0 then
+		EnemiesAlive = EnemiesAlive - 1
 		self.destroyed = true
 	end
 end
