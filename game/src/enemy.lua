@@ -55,7 +55,21 @@ function Enemy:calculatePath()
         for node, _ in path:iter() do
             table.insert(self.path, node)
         end
-        self.pathIndex = 1
+		
+        local closestIdx = 1
+        local minDistSq = math.huge
+        for i, node in ipairs(self.path) do
+            local nx, ny = node:getPos()
+            local wx, wy = TileToWorld(nx, ny)
+            local dx = wx - self.position.x
+            local dy = wy - self.position.y
+            local distSq = dx*dx + dy*dy
+            if distSq < minDistSq then
+                minDistSq = distSq
+                closestIdx = i
+            end
+        end
+        self.pathIndex = closestIdx
     end
 end
 
@@ -83,10 +97,6 @@ end
 function Enemy:draw()
 	love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("line", self.position.x, self.position.y, self.size.x, self.size.y)
-end
-
-function Enemy:move(x, y)
-    self.position = Vector.__add(self.position, Vector.new(x * self.speed, -y * self.speed))
 end
 
 function Enemy:onHit()

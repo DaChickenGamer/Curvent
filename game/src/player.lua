@@ -48,10 +48,10 @@ function Player:move(x, y)
     end
 
 	local hitbox = {
-		x = self.position.x + self.facing.x * self.speed + 1,
-		y = self.position.y + self.facing.y * self.speed + 1,
-		w = self.size.x - 1,
-		h = self.size.y - 1,
+		x = self.position.x + self.facing.x * self.speed + 2,
+		y = self.position.y + self.facing.y * self.speed + 2,
+		w = self.size.x - 2,
+		h = self.size.y - 2,
 	}
 	if(self:checkHitWithTag(hitbox, "tile")) then return end
 
