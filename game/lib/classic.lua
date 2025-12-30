@@ -13,6 +13,7 @@ Object.__index = Object
 
 
 function Object:new()
+	self.destroyed = false
 end
 
 
