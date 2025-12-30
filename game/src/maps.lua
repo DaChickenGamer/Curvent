@@ -15,13 +15,18 @@ EnemiesAlive = 0
 LoadingMap = false
 
 function NextMap()
-	gameObjects = {}
     currentMapIndex = currentMapIndex % #mapOrder + 1
     LoadMapFile(mapOrder[currentMapIndex])
 end
 
 function LoadMap(map)
 	LoadingMap = true
+	gameObjects = {}
+	TotalEnemies = 0
+
+	jumperGrid = Grid(BuildJumperGrid(map))
+    pathfinder = Pathfinder(jumperGrid, "ASTAR", 0)
+    pathfinder:setMode("ORTHOGONAL")
 
     for y, row in ipairs(map) do
         for x = 1, #row do
@@ -44,7 +49,31 @@ function LoadMap(map)
 	LoadingMap = false
 end
 
+function BuildJumperGrid(map)
+    local grid = {}
+
+    for y, row in ipairs(map) do
+        grid[y] = {}
+        for x = 1, #row do
+            local char = row:sub(x, x)
+            -- 1 = blocked, 0 = walkable
+            grid[y][x] = (char == "#") and 1 or 0
+        end
+    end
+
+    return grid
+end
+
 function LoadMapFile(name)
     local map = require("src.maps." .. name)
     LoadMap(map)
+end
+
+
+function WorldToTile(x, y)
+    return math.floor(x / TILE_SIZE) + 1, math.floor(y / TILE_SIZE) + 1
+end
+
+function TileToWorld(x, y)
+    return (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE
 end

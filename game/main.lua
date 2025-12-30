@@ -17,6 +17,8 @@ function love.load()
 	Tile = require "src.tile"
 	Maps = require "src.maps"
 
+	Grid = require ("lib.jumper.grid")
+	Pathfinder = require ("lib.jumper.pathfinder")
 	NextMap()
 end
 
