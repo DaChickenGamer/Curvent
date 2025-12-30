@@ -8,6 +8,7 @@ local TILE = {
 TILE_SIZE = 32
 
 local mapOrder = { "level1", "level2", "level3", "level4", "level5" }
+local enemyTypePerLevel = { "wave", "arc", "spiral", "homing", "richochet" }
 local currentMapIndex = 0
 
 TotalEnemies = 0
@@ -21,7 +22,7 @@ end
 
 function LoadMap(map)
 	LoadingMap = true
-	gameObjects = {}
+	GameObjects = {}
 	TotalEnemies = 0
 
 	jumperGrid = Grid(BuildJumperGrid(map))
@@ -35,11 +36,12 @@ function LoadMap(map)
             local worldY = (y - 1) * TILE_SIZE
 
             if char == "#" then
-                table.insert(gameObjects, Tile(worldX, worldY, TILE_SIZE, TILE_SIZE))
+                table.insert(GameObjects, Tile(worldX, worldY, TILE_SIZE, TILE_SIZE))
             elseif char == "P" then
-                table.insert(gameObjects, Player(worldX, worldY, TILE_SIZE, TILE_SIZE))
+                table.insert(GameObjects, Player(worldX, worldY, TILE_SIZE, TILE_SIZE))
             elseif char == "E" then
-                table.insert(gameObjects, Enemy(worldX, worldY, TILE_SIZE, TILE_SIZE))
+				local enemyType = enemyTypePerLevel[currentMapIndex] or "wave"
+                table.insert(GameObjects, Enemy(worldX, worldY, TILE_SIZE, TILE_SIZE, enemyType))
 				TotalEnemies = TotalEnemies + 1
             end
         end

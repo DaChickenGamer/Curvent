@@ -93,7 +93,7 @@ function Player:ChangeHealth(amount)
 end
 
 function Player:checkHitWithTag(hitbox, tag)
-    for _, obj in ipairs(gameObjects) do
+    for _, obj in ipairs(GameObjects) do
         if obj ~= self and obj.tags and table.find(obj.tags, tag) then
             if AABB_Box(hitbox, obj) then
                 if obj.onHit then

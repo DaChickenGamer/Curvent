@@ -1,6 +1,6 @@
 Enemy = Object:extend()
 
-function Enemy:new(x, y, w, h)
+function Enemy:new(x, y, w, h, enemyType)
 	Enemy.super.new(self)
 
     if type(x) == "table" then
@@ -9,6 +9,7 @@ function Enemy:new(x, y, w, h)
         y = args.y
 		w = args.w
 		h = args.h
+		enemyType = args.enemyType
     end
 
     self.position = Vector.new(x or 0, y or 0)
@@ -21,6 +22,10 @@ function Enemy:new(x, y, w, h)
     self.pathIndex = 1
     self.repathTimer = 0
 
+	self.enemyType = enemyType or "wave"
+	self.projectileCooldown = 0
+	self.projectileDelay = 1.5
+
 	table.insert(self.tags, "enemy")
 end
 
@@ -31,13 +36,35 @@ function Enemy:update(dt)
         self.repathTimer = 0.5
     end
 
+	if self.projectileCooldown > 0 then
+		self.projectileCooldown = self.projectileCooldown - dt
+	else
+		self.projectileCooldown = self.projectileDelay
+		local playerObj = nil
+		for _, obj in ipairs(GameObjects) do
+			if obj:compareTag("player") then
+				playerObj = obj
+				break
+			end
+		end
+
+		local projectile = Projectile(self.position.x + self.size.x / 2, self.position.y + self.size.y / 2, self.enemyType)
+
+		if playerObj and self.enemyType ~= "homing" and self.enemyType ~= "homing_astar" then
+			local direction = (playerObj.position - projectile.position):normalize()
+			projectile.velocity = direction * projectile.speed
+		end
+
+		table.insert(GameObjects, projectile)
+	end
+
     self:followPath(dt)
 end
 
 function Enemy:calculatePath()
     local playerObj = nil
 
-    for _, obj in ipairs(gameObjects) do
+    for _, obj in ipairs(GameObjects) do
         if obj:compareTag("player") then
             playerObj = obj
             break
@@ -55,7 +82,7 @@ function Enemy:calculatePath()
         for node, _ in path:iter() do
             table.insert(self.path, node)
         end
-		
+
         local closestIdx = 1
         local minDistSq = math.huge
         for i, node in ipairs(self.path) do

@@ -1,7 +1,6 @@
 Time_Dilation = .1
 
-gameObjects = {}
-
+GameObjects = {}
 
 function love.load()
     Object = require "lib.classic"
@@ -19,6 +18,7 @@ function love.load()
 
 	Grid = require ("lib.jumper.grid")
 	Pathfinder = require ("lib.jumper.pathfinder")
+
 	NextMap()
 end
 
@@ -39,25 +39,25 @@ function love.draw()
 end
 
 function GameObjectUpdate(dt)
-	for i = #gameObjects, 1, -1 do
-		local obj = gameObjects[i]
+	for i = #GameObjects, 1, -1 do
+		local obj = GameObjects[i]
 
 		if obj.update then
 			obj:update(dt)
 		end
 
 		if obj.destroyed then
-			table.remove(gameObjects, i)
+			table.remove(GameObjects, i)
 		end
 	end
 end
 
 function CollisionCheck()
-	for i = 1, #gameObjects do
-		local a = gameObjects[i]
+	for i = 1, #GameObjects do
+		local a = GameObjects[i]
 
-		for j = i + 1, #gameObjects do
-			local b = gameObjects[j]
+		for j = i + 1, #GameObjects do
+			local b = GameObjects[j]
 
 			if AABB(a, b) then
 				if a.onCollision then a:onCollision(b) end
@@ -68,8 +68,8 @@ function CollisionCheck()
 end
 
 function GameObjectDraw()
-	for i = 1, #gameObjects do
-		local obj = gameObjects[i]
+	for i = 1, #GameObjects do
+		local obj = GameObjects[i]
 
 		if obj.draw then
 			obj:draw()
@@ -80,7 +80,7 @@ end
 function HandlePlayerMovement()
     local playerObj = nil
 
-    for _, obj in ipairs(gameObjects) do
+    for _, obj in ipairs(GameObjects) do
         if obj:compareTag("player") then
             playerObj = obj
             break
